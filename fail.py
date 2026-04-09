@@ -1,37 +1,22 @@
-12:17:16 INFO [rubin.analysis] Ensemble erstellt (EconML EnsembleCateEstimator): 3 Modelle gleichgewichtet (CausalForestDML, ParamDML, NonParamDML).
-12:17:16 INFO [rubin.analysis] [rubin] Step 5/6: Evaluation & Metriken
-12:17:38 INFO [rubin.analysis] DRTester Nuisance einmalig gefittet (BT, cv=3, n_est≤100). Wird für alle Modelle wiederverwendet.
-12:17:39 INFO [rubin.analysis] Evaluation Predictions_CausalForestDML: n=389988, min=-0.000892275, median=0.00075225, max=0.0089181, std=0.000325844, non-zero=389988/389988, unique=999
-12:17:39 INFO [rubin.analysis] Evaluation Predictions_ParamDML: n=389988, min=-0.0479861, median=0.000676784, max=0.0316661, std=0.00221398, non-zero=389988/389988, unique=999
-12:17:40 INFO [rubin.analysis] Evaluation Predictions_NonParamDML: n=389988, min=-0.0178867, median=0.000804738, max=0.014292, std=0.000443451, non-zero=389988/389988, unique=999
-12:17:40 WARNING [rubin.analysis] Uplift-Evaluation fehlgeschlagen.
+16:41:40 INFO [rubin.training] CausalForestDML: 5 Folds sequentiell.
+16:47:12 INFO [rubin.analysis] Predictions_CausalForestDML: CATE min=-0.0056871, median=0.000717207, max=0.0216319, std=0.000670701, unique=389418/389988, non-zero=389988/389988
+16:47:13 INFO [rubin.training] ParamDML: 5 Folds parallel (n_jobs=5, threads) auf 64 Kernen.
+16:49:00 INFO [rubin.analysis] Predictions_ParamDML: CATE min=-0.0464705, median=0.000677872, max=0.0312632, std=0.00219879, unique=389449/389988, non-zero=389988/389988
 Traceback (most recent call last):
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3812, in get_loc
-    return self._engine.get_loc(casted_key)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "pandas/_libs/index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
-  File "pandas/_libs/index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
-  File "pandas/_libs/hashtable_class_helper.pxi", line 7096, in pandas._libs.hashtable.PyObjectHashTable.get_item
-KeyError: 'Y'
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 2685, in run
-    eval_summary, _, fitted_tester_bt = self._run_evaluation(cfg, X, T, Y, S, holdout_data, preds, models, tuned_params_by_model, mlflow, eval_mask=eval_mask)
-                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 920, in _run_evaluation
-    y = dfp["Y"].to_numpy()
-        ~~~^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/core/frame.py", line 4113, in __getitem__
-    indexer = self.columns.get_loc(key)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/mnt/rubin/.pixi/envs/default/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3819, in get_loc
-    raise KeyError(key) from err
-KeyError: 'Y'
-12:17:41 INFO [rubin.analysis] RAM-Optimierung: gc.collect() nach Surrogate.
-12:17:41 INFO [rubin.analysis] RAM-Optimierung: Modelle, Predictions und X_full freigegeben.
-12:17:41 INFO [rubin.analysis] [rubin] Step 6/6: HTML-Report
-12:17:41 INFO [rubin.reporting] HTML-Report geschrieben: /mnt/rubin/.rubin_cache/analysis_report.html
-12:17:41 INFO [rubin.analysis] HTML-Report geschrieben: /mnt/rubin/.rubin_cache/analysis_report.html
+  File "/mnt/rubin/run_analysis.py", line 132, in <module>
+    main()
+  File "/mnt/rubin/run_analysis.py", line 128, in main
+    pipe.run(export_bundle=args.export_bundle, bundle_dir=args.bundle_dir, bundle_id=args.bundle_id)
+  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 2657, in run
+    models, preds, fold_models = self._run_training(cfg, X, T, Y, tuned_params_by_model, holdout_data, mlflow)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/rubin/pipelines/analysis_pipeline.py", line 608, in _run_training
+    model = self.registry.create(name, ctx)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/rubin/model_registry.py", line 171, in create
+    return self._factories[name](ctx)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/rubin/rubin/model_registry.py", line 310, in <lambda>
+    lambda ctx: CausalForestAdapter(
+                ^^^^^^^^^^^^^^^^^^^^
+TypeError: rubin.model_registry.CausalForestAdapter() got multiple values for keyword argument 'n_jobs'
